@@ -5,18 +5,20 @@ Howto:
 
 To run the tests:
 
-export DFTS_SUT=srm-devel.desy.de
-export DFTS_BASEPATH=/pnfs/desy.de/data/dteam/tigran
+1. Exports
+ * export DFTS_SUT=srm-devel.desy.de
+ * export DFTS_BASEPATH=/pnfs/desy.de/data/dteam/tigran
 
+2. Configure your voms and run:
+ * voms-proxy-init --voms ......
 
-voms-proxy-init --voms ......
-
-python srmcopy.py
-python spacemanager.py
-python lcgcopy.py
-python serviceports.py
-python gsiftp.py
-python dcap.py
+3. Run commands:
+ * python srmcopy.py
+ * python spacemanager.py
+ * python lcgcopy.py
+ * python serviceports.py
+ * python gsiftp.py
+ * python dcap.py
 
 
 
