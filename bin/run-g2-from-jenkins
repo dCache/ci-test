@@ -37,7 +37,7 @@ check_envars DFTS_SUT DFTS_BASEPATH
 
 echo Test end-point is $DFTS_SUT:$DFTS_BASEPATH
 
-export G2=/usr/lib/python/g2
+export G2=/usr/lib/python2.4/site-packages/g2
 export DFTS_GLOBUS_HOME=/usr
 export DFTS_SRMCP_HOME=/usr
 export DFTS_GLITE_HOME=/usr
