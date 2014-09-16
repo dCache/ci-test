@@ -16,7 +16,7 @@ $(PACKAGE): bin tests
 	tar czf $(PACKAGE) $(PACKAGE_NAME)
 	rm -rf $(PACKAGE_NAME)
 
-rpm: g2.spec package rpmrc
+rpm: clean g2.spec package rpmrc
 	[ ! -d RPM-BUILD ] && mkdir -p RPM-BUILD/tmp || :
 	[ ! -d RPM-BUILD/SOURCES ] && mkdir -p RPM-BUILD/SOURCES || :
 	[ ! -d RPM-BUILD/BUILD ] && mkdir -p RPM-BUILD/BUILD || :
@@ -37,7 +37,7 @@ rpmlint: g2.spec
 	rpmlint g2.spec
 
 clean:
-	rm -f $(PACKAGE) g2.spec test/*.pyc rpmmacros rpmrc
-	rm -rf $(PACKAGE_NAME) RPM-BUILD
+	rm -f g2.spec test/*.pyc rpmmacros rpmrc
+	rm -rf g2-* RPM-BUILD
 
 .PHONY: package rpm rpmlint clean rpmrc
