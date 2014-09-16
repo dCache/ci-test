@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+#  Try to figure out into which directory the
+#  tar archive containing the source code should
+#  be installed.
+
+expand() { # $1 - name of the macro to expand
+    utils/rpmbuild --showrc | awk "/:\ $1[^a-zA-Z_]/{print \$3}"
+}
+
+fully_expand() { # $1 - name of macro
+    local current
+    local name
+    local value
+    current=$(expand $1)
+
+    while echo $current | grep -q '%{[^}]*}'; do
+        name=$(echo $current | sed 's/.*%{\([^}]*\)}.*/\1/')
+        value=$(expand $name)
+        current=$(echo $current | sed "s,%{$name},$value,g")
+    done
+
+    echo $current
+}
+
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        -*)
+            install_ops="$install_ops $1"
+            shift
+            ;;
+        *)
+            break;
+    esac
+done
+
+dir=$(fully_expand _sourcedir)
+
+for file in "$@"; do
+    install $install_ops "$file" "$dir"
+done
