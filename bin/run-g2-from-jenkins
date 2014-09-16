@@ -1,0 +1,89 @@
+#!/bin/bash
+##  This script is for running the G2 tests as a job from
+##  jenkins.  It is here to make the Jekins job trivial.
+##  If the job script is anything other that simply
+##  invoking this script then this script is broken and
+##  should be fixed.
+
+function check_envar() # $1 name of var
+{
+    val=$(eval echo \$$1)
+
+    if [ -z "$val" ]; then
+        echo "Environment variable $1 is missing"
+        exit 1
+    fi
+}
+
+
+function check_envars()
+{
+  for var in "$@"; do
+      check_envar "$var"
+  done
+}
+
+function run_g2()
+{
+    python $G2/srmcopy.py -x
+    python $G2/spacemanager.py -x
+    python $G2/lcgcopy.py -x
+    #python $G2/serviceports.py -x
+    python $G2/gsiftp.py -x
+    #python ~/testsuite/dcap.py -x
+}
+
+check_envars DFTS_SUT DFTS_BASEPATH
+
+echo Test end-point is $DFTS_SUT:$DFTS_BASEPATH
+
+export G2=/usr/lib/python/g2
+export DFTS_GLOBUS_HOME=/usr
+export DFTS_SRMCP_HOME=/usr
+export DFTS_GLITE_HOME=/usr
+export DFTS_EDG_HOME=/usr
+
+
+echo
+echo
+echo  "Running tests with SHA1 certificate"
+echo
+voms-proxy-init -rfc --voms desy
+run_g2
+
+voms-proxy-destroy
+
+echo
+echo
+echo  "Running tests with SHA2 certificate"
+echo
+#
+#  voms-clients-2.0.11-2.el5.x86_64 cannot create RFC proxys with
+#  SHA2 user certificates.  It fails with the output:
+#
+#      Your identity: /C=DE/ST=Hamburg/O=dCache.ORG/CN=The Great Gonzo
+#      Creating temporary proxy ............................. Done
+#      Contacting  grid-voms.desy.de:15104 [/C=DE/O=GermanGrid/OU=DESY/CN=host/grid-voms.desy.de] "desy" Done
+#      Creating proxy ..........................................*** stack smashing detected ***: voms-proxy-init terminated
+#      Aborted
+#
+#  As a work-around, we generate a non-RFC proxy.
+#
+voms-proxy-init -cert ~/.globus/TheGreatGonzo-cert.pem -key ~/.globus/TheGreatGonzo-key.pem --voms desy
+run_g2
+
+
+#export ROOTSYS=/root/root_5.18/
+#export DATASET_PREFIX=$DFTS_SUT/pnfs/desy.de/data/dteam/root/dataset/
+
+#export DATASET_LIST=~/g2/ROOTTests/ParallelOpen/filelist
+# do the ROOT analysis test twice using dcap and xrootd for I/O
+#python ~/g2/ROOTParallelOpen.py -x
+
+#export DATASET_LIST=~/g2/ROOTTests/TChain/filelist
+# do the ROOT TChain test twice using dcap and xrootd for I/O
+#python ~/g2/ROOTTChain.py -x
+
+# this test changes role. run it at the end
+#python ~/g2/auth.py -x
+
