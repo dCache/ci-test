@@ -21,14 +21,6 @@ class SETestCase(unittest.TestCase):
 
         self.user = os.environ.get("USER")
 
-        #
-        # locations of client tools
-        #
-        self.srmcp_home = os.environ.get('DFTS_SRMCP_HOME', '/opt/d-cache/srm')
-        self.globus_home = os.environ.get('DFTS_GLOBUS_HOME', '/opt/globus')
-        self.glite_home = os.environ.get('DFTS_GLITE_HOME', '/opt/lcg')
-        self.edg_home = os.environ.get('DFTS_EDG_HOME', '/opt/edg')
-
         try:
             self.timeout = int(os.environ.get("DFTS_TIMEOUT"))
         except:
@@ -100,8 +92,6 @@ class SETestCase(unittest.TestCase):
 
     def __executeCommand(self, attributes, additionalENVs=None):
         executable = attributes[0]
-
-        self.failIf( not os.path.exists(executable), "%s : doesn't exist or not an absolute path" % executable)
 
         self.externalCommand = streamer.childprocessstreeam()
 

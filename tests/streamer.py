@@ -107,7 +107,7 @@ class launcher:
             for pipe in self.pipeList:
                 pipe.connectChild()
 
-            os.execve(self.executable, self.attributes,self.environmentGet())
+            os.execvpe(self.executable, self.attributes,self.environmentGet())
 
             sys.exit()
         if processid > 0:
