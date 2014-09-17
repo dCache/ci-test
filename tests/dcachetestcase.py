@@ -47,6 +47,13 @@ class SETestCase(unittest.TestCase):
 
         (rc, output) = self.__executeCommand(attributes, newENVs)
 
+        if rc == 0:
+            print "OK:", " ".join(attributes)
+        else:
+            print "FAILED:", " ".join(attributes)
+            print "       " + output.replace('\n', '\n       ')
+            print output
+
         if msg is None:
             msg = output
 
@@ -63,6 +70,12 @@ class SETestCase(unittest.TestCase):
 
         (rc, output) = self.__executeCommand(attributes, newEnvs)
 
+        if rc == 0:
+            print "FAILED (unexpected succeeded):", " ".join(attributes)
+            print "                              " + output.replace('\n', '\n                              ')
+        else:
+            print "OK (expected failure):", " ".join(attributes)
+
         if msg is None:
             msg =  output
 
@@ -71,10 +84,21 @@ class SETestCase(unittest.TestCase):
 
     def execute(self, attributes):
         (rc, output) = self.__executeCommand(attributes)
+        if rc == 0:
+            print "Run: %s" % " ".join(attributes)
+        else:
+            print "Run (rc=%s): %s" % (rc, " ".join(attributes))
+            print output
+            print "        " + output.replace('\n', '\n         ')
         return output
 
-    def __executeCommand(self, attributes, additionalENVs=None):
 
+    def executeIgnoreFailure(self, attributes):
+        (rc, output) = self.__executeCommand(attributes)
+        print "Run (rc=%s): %s" % (rc, " ".join(attributes))
+
+
+    def __executeCommand(self, attributes, additionalENVs=None):
         executable = attributes[0]
 
         self.failIf( not os.path.exists(executable), "%s : doesn't exist or not an absolute path" % executable)
@@ -100,8 +124,7 @@ class SETestCase(unittest.TestCase):
 
             self.externalCommand.environmentSet(env)
 
-
-
+        self.commandOutput = ''
         rc = self.externalCommand.run()
         return (rc, self.commandOutput)
 

@@ -57,7 +57,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
         self.remoteURL = "srm://%s:8443/%s/%s" % (self.sut, self.basepath, self.uniqueFile)
         self.assertCommandFail( [self.srmcp_home + '/bin/srmcp','-1','-retry_num=', '1', self.localURL, self.remoteURL] )
 
-        self.execute([self.srmcp_home + '/bin/srmrm', self.remoteURL])
+        self.executeIgnoreFailure([self.srmcp_home + '/bin/srmrm', self.remoteURL])
 
     def testv2CopyBadChecksumMD5(self):
         #
@@ -68,7 +68,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
         self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
         self.assertCommandFail( [self.srmcp_home + '/bin/srmcp','-1','-retry_num=', '1', '-cksm_type=MD5', self.localURL, self.remoteURL] )
 
-        self.execute([self.srmcp_home + '/bin/srmrm', self.remoteURL])
+        self.executeIgnoreFailure([self.srmcp_home + '/bin/srmrm', self.remoteURL])
 
     def testV2CopyDirNotExist(self):
 
@@ -82,7 +82,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
 
         self.execute([self.srmcp_home + '/bin/srmrm', self.remoteURL])
         dirURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir)
-        self.execute([self.srmcp_home + '/bin/srmrm', dirURL])
+        self.execute([self.srmcp_home + '/bin/srmrmdir', dirURL])
 
     def testSrmLsValidPAth(self):
         self.remoteURL = "srm://%s:8443/%s/%s" % (self.sut, self.ws2path, self.basepath)
@@ -98,7 +98,8 @@ class SrmCpSuite(dcachetestcase.SETestCase):
         self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir)
         self.assertCommandPass( [self.srmcp_home + '/bin/srmmkdir', self.remoteURL] )
         self.assertCommandPass( [self.srmcp_home + '/bin/srm-set-permissions','-2','-type=CHANGE','-other=NONE', self.remoteURL] )
-        self.execute([self.srmcp_home + '/bin/srmrm', uniqDir])
+        dirURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir)
+        self.execute([self.srmcp_home + '/bin/srmrmdir', dirURL])
 
     def testSrmmvIntoSame(self):
         self.remoteSourceURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
