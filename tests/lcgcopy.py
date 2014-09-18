@@ -18,46 +18,49 @@ class LcgCpSuite(dcachetestcase.SETestCase):
 
     def testLcgCp(self):
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s:8443/srm/managerv2?SFN=%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.remoteURL, self.tempURL] )
         self.assertSameSum(self.localFile, self.tempFile)
 
-        self.execute(['srmrm', self.remoteURL])
+        self.execute(['srmrm', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
+
 
     def testLcgCpIntoNonExistDir(self):
 
         uniqDir = localtools.uniqueFileNameGenerator("GenDir").next();
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir, self.uniqueFile)
+        self.remoteURL = "srm://%s:8443/srm/managerv2?SFN=%s/%s/%s" % (self.sut, self.basepath, uniqDir, self.uniqueFile)
 
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.remoteURL, self.tempURL] )
         self.assertSameSum(self.localFile, self.tempFile)
 
-        self.execute(['srmrm', self.remoteURL])
+        self.execute(['srmrm', "srm://%s%s/%s/%s" % (self.sut, self.basepath, uniqDir, self.uniqueFile)])
+
 
     def testLcgGtGsiFtp(self):
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s:8443/srm/managerv2?SFN=%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['lcg-gt', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.remoteURL, 'gsiftp'] )
 
-        self.execute(['srmrm', self.remoteURL])
+        self.execute(['srmrm', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
 
 
     def testLcgLsFile(self):
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s:8443/srm/managerv2?SFN=%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['lcg-ls', '-b' , '-T', 'srmv2', '-l', self.remoteURL] )
 
-        self.execute(['srmrm', self.remoteURL])
+        self.execute(['srmrm', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
+
 
     def testLcgLsDir(self):
-        self.remoteURL = "srm://%s:8443/%s/%s" % (self.sut, self.ws2path, self.basepath)
+        self.remoteURL = "srm://%s:8443/srm/managerv2?SFN=%s" % (self.sut, self.basepath)
 
         self.assertCommandPass( ['lcg-ls', '-b' , '-T', 'srmv2', '-l', self.remoteURL] )
 

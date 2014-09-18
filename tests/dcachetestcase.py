@@ -13,11 +13,8 @@ class SETestCase(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName);
         self.sut = os.environ.get("DFTS_SUT")
         self.basepath = os.environ.get("DFTS_BASEPATH")
-#        self.ws1path = os.environ.get("SRMV1WS")
-#        self.ws2path = os.environ.get("SRMV2WS")
 
         self.ws1path = "srm/managerv1"
-        self.ws2path = "srm/managerv2?SFN="
 
         self.user = os.environ.get("USER")
 

@@ -21,7 +21,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
 
     def testV2Copy(self):
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
         self.assertCommandPass( ['srmcp','-2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['srmcp','-2', self.remoteURL, self.tempURL] )
@@ -31,7 +31,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
 
     def testV2CopyMD5(self):
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
         self.assertCommandPass( ['srmcp','-2', '-cksm_type=MD5', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['srmcp','-2', self.remoteURL, self.tempURL] )
@@ -41,7 +41,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
 
     def testV1Copy(self):
 
-        self.remoteURL = "srm://%s:8443/%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
         self.assertCommandPass( ['srmcp','-1', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['srmcp','-1', self.remoteURL, self.tempURL] )
         self.assertSameSum(self.localFile, self.tempFile)
@@ -54,7 +54,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
         # modified file will produce differ checksum
         #
         self.localURL = "file://///proc/uptime"
-        self.remoteURL = "srm://%s:8443/%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
         self.assertCommandFail( ['srmcp','-1','-retry_num=', '1', self.localURL, self.remoteURL] )
 
         self.executeIgnoreFailure(['srmrm', self.remoteURL])
@@ -65,7 +65,7 @@ class SrmCpSuite(dcachetestcase.SETestCase):
         # modified file will produce differ checksum
         #
         self.localURL = "file://///proc/uptime"
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
         self.assertCommandFail( ['srmcp','-1','-retry_num=', '1', '-cksm_type=MD5', self.localURL, self.remoteURL] )
 
         self.executeIgnoreFailure(['srmrm', self.remoteURL])
@@ -74,44 +74,44 @@ class SrmCpSuite(dcachetestcase.SETestCase):
 
         uniqDir = localtools.uniqueFileNameGenerator("GenDir").next();
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir, self.uniqueFile)
+        self.remoteURL = "srm://%s%s/%s/%s" % (self.sut, self.basepath, uniqDir, self.uniqueFile)
 
         self.assertCommandPass( ['srmcp','-2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['srmcp','-2', self.remoteURL, self.tempURL] )
         self.assertSameSum(self.localFile, self.tempFile)
 
         self.execute(['srmrm', self.remoteURL])
-        dirURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir)
+        dirURL = "srm://%s%s/%s" % (self.sut, self.basepath, uniqDir)
         self.execute(['srmrmdir', dirURL])
 
     def testSrmLsValidPAth(self):
-        self.remoteURL = "srm://%s:8443/%s/%s" % (self.sut, self.ws2path, self.basepath)
+        self.remoteURL = "srm://%s%s/" % (self.sut, self.basepath)
         self.assertCommandPass( ['srmls', '-2', self.remoteURL] )
 
     def testSrmLsInValidPAth(self):
 
-        self.remoteURL = "srm://%s:8443/%s/var/log" % (self.sut, self.ws2path)
+        self.remoteURL = "srm://%s/var/log" % (self.sut)
         self.assertCommandFail( ['srmls', '-2', self.remoteURL] )
 
     def testSrmChangePerm(self):
         uniqDir = localtools.uniqueFileNameGenerator("GenDir").next();
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, uniqDir)
         self.assertCommandPass( ['srmmkdir', self.remoteURL] )
         self.assertCommandPass( ['srm-set-permissions','-2','-type=CHANGE','-other=NONE', self.remoteURL] )
-        dirURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, uniqDir)
+        dirURL = "srm://%s%s/%s" % (self.sut, self.basepath, uniqDir)
         self.execute(['srmrmdir', dirURL])
 
     def testSrmmvIntoSame(self):
-        self.remoteSourceURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
-        self.remoteDestURL = "srm://%s:8443/%s/%s/./%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
+        self.remoteSourceURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+        self.remoteDestURL = "srm://%s%s/./%s" % (self.sut, self.basepath, self.uniqueFile)
         self.assertCommandPass(['srmcp', '-2', self.localURL, self.remoteSourceURL])
         self.assertCommandPass(['srmmv', self.remoteSourceURL, self.remoteDestURL])
         self.execute(['srmrm', self.remoteSourceURL])
 
     def testV2CopyHTTP(self):
 
-        self.remoteURL = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile)
-        self.remoteURL1 = "srm://%s:8443/%s/%s/%s" % (self.sut, self.ws2path, self.basepath, self.uniqueFile1)
+        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+        self.remoteURL1 = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile1)
         self.remoteHTTP = "http://%s:2880/%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
         self.assertCommandPass( ['srmcp','-2', self.localURL, self.remoteURL] )

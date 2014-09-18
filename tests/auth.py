@@ -11,7 +11,7 @@ class AuthSuite(dcachetestcase.SETestCase):
         dcachetestcase.SETestCase.__init__(self,methodName);
 
     def setUp(self):
-        self.surlBase = "srm://%s:8443/%s" % (self.sut, self.ws2path)
+        self.surlBase = "srm://%s/" % (self.sut)
 
     # this test require special setup on SRM:
     #    two space tokens have to be generated one for production role, one without role:
