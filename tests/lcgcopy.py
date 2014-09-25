@@ -24,7 +24,7 @@ class LcgCpSuite(dcachetestcase.SETestCase):
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.remoteURL, self.tempURL] )
         self.assertSameSum(self.localFile, self.tempFile)
 
-        self.execute(['srmrm', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
+        self.execute(['srmrm', '-retry_num=0', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
 
 
     def testLcgCpIntoNonExistDir(self):
@@ -37,7 +37,7 @@ class LcgCpSuite(dcachetestcase.SETestCase):
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.remoteURL, self.tempURL] )
         self.assertSameSum(self.localFile, self.tempFile)
 
-        self.execute(['srmrm', "srm://%s%s/%s/%s" % (self.sut, self.basepath, uniqDir, self.uniqueFile)])
+        self.execute(['srmrm', '-retry_num=0', "srm://%s%s/%s/%s" % (self.sut, self.basepath, uniqDir, self.uniqueFile)])
 
 
     def testLcgGtGsiFtp(self):
@@ -47,7 +47,7 @@ class LcgCpSuite(dcachetestcase.SETestCase):
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['lcg-gt', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.remoteURL, 'gsiftp'] )
 
-        self.execute(['srmrm', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
+        self.execute(['srmrm', '-retry_num=0', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
 
 
     def testLcgLsFile(self):
@@ -56,7 +56,7 @@ class LcgCpSuite(dcachetestcase.SETestCase):
         self.assertCommandPass( ['lcg-cp', '-b' , '-D', 'srmv2', '-T', 'srmv2', self.localURL, self.remoteURL] )
         self.assertCommandPass( ['lcg-ls', '-b' , '-T', 'srmv2', '-l', self.remoteURL] )
 
-        self.execute(['srmrm', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
+        self.execute(['srmrm', '-retry_num=0', "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)])
 
 
     def testLcgLsDir(self):
