@@ -1,9 +1,10 @@
 import unittest
+import string
 import os
 import select
 import streamer
 import localtools
-
+import datetime
 
 
 class SETestCase(unittest.TestCase):
@@ -37,10 +38,10 @@ class SETestCase(unittest.TestCase):
         (rc, output) = self.__executeCommand(attributes, newENVs)
 
         if rc == 0:
-            print "OK:", " ".join(attributes)
+            print "OK [%s]: %s" % (self.duration, " ".join(attributes))
         else:
-            print "FAILED:", " ".join(attributes)
-            print "       " + output.replace('\n', '\n       ')
+            print "FAILED [%s]: %s" % (self.duration, " ".join(attributes))
+            print "    " + output.replace('\n', '\n    ')
             print output
 
         if msg is None:
@@ -60,10 +61,10 @@ class SETestCase(unittest.TestCase):
         (rc, output) = self.__executeCommand(attributes, newEnvs)
 
         if rc == 0:
-            print "FAILED (unexpected succeeded):", " ".join(attributes)
-            print "                              " + output.replace('\n', '\n                              ')
+            print "[%s] FAILED (unexpected succeeded): %s" % (self.duration, " ".join(attributes))
+            print "    " + output.replace('\n', '\n    ')
         else:
-            print "OK (expected failure):", " ".join(attributes)
+            print "[%s] OK (expected failure): %s" % (self.duration, " ".join(attributes))
 
         if msg is None:
             msg =  output
@@ -74,9 +75,9 @@ class SETestCase(unittest.TestCase):
     def execute(self, attributes):
         (rc, output) = self.__executeCommand(attributes)
         if rc == 0:
-            print "Run: %s" % " ".join(attributes)
+            print "[%s] Ran : %s" % (self.duration, " ".join(attributes))
         else:
-            print "Run (rc=%s): %s" % (rc, " ".join(attributes))
+            print "[%s] Ran (rc=%s): %s" % (self.duration, rc, " ".join(attributes))
             print output
             print "        " + output.replace('\n', '\n         ')
         return output
@@ -84,7 +85,10 @@ class SETestCase(unittest.TestCase):
 
     def executeIgnoreFailure(self, attributes):
         (rc, output) = self.__executeCommand(attributes)
-        print "Run (rc=%s): %s" % (rc, " ".join(attributes))
+        if rc == 0:
+            print "[%s] Ran: %s" % (self.duration, " ".join(attributes))
+        else:
+            print "[%s] Ran (rc=%s): %s" % (self.duration, rc, " ".join(attributes))
 
 
     def __executeCommand(self, attributes, additionalENVs=None):
@@ -112,15 +116,22 @@ class SETestCase(unittest.TestCase):
             self.externalCommand.environmentSet(env)
 
         self.commandOutput = ''
+
         rc = self.externalCommand.run()
+
+        self.duration = str(datetime.timedelta(seconds=self.externalCommand.duration))
+        index = string.find(self.duration, '.')
+        if index != -1:
+            self.duration = self.duration[:index+2]
+
         return (rc, self.commandOutput)
 
+
     def assertSameSum(self, original, compareto):
-        self.assertEqual(localtools.md5sum(original),localtools.md5sum(compareto) , "Check sum do not match")
+        self.assertEqual(localtools.md5sum(original),localtools.md5sum(compareto) , "Checksum do not match")
 
 
     def collectorStdErrOut(self,handle,output,EventFileDesc):
-
         if ( EventFileDesc and select.POLLIN):
             self.commandOutput += output.replace('<','&lt;').replace('>','&gt;')
 

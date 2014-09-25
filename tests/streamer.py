@@ -1,3 +1,4 @@
+
 import commands
 import popen2
 import fcntl
@@ -316,6 +317,7 @@ class childprocessstreeam:
             (var1,var2) = os.waitpid(lobj.pidGet(), os.WNOHANG)
             self.retCode = var2
 
+        self.duration = time.time() - starttime
 
         return (self.retCode)
 
