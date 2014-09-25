@@ -38,9 +38,9 @@ class SETestCase(unittest.TestCase):
         (rc, output) = self.__executeCommand(attributes, newENVs)
 
         if rc == 0:
-            print "OK [%s]: %s" % (self.duration, " ".join(attributes))
+            print "[%s] OK: %s" % (self.duration, " ".join(attributes))
         else:
-            print "FAILED [%s]: %s" % (self.duration, " ".join(attributes))
+            print "[%s] FAILED: %s" % (self.duration, " ".join(attributes))
             print "    " + output.replace('\n', '\n    ')
             print output
 
