@@ -18,13 +18,13 @@ class DcapSuite(dcachetestcase.SETestCase):
     def testGsiDccp(self):
         self.remoteURL = "gsidcap://%s:22128/%s/%s" % (self.sut, self.basepath, self.uniqueFile)
 
-        self.assertCommandPass( ['/opt/d-cache/dcap/bin/dccp', self.localFile, self.remoteURL] )
-        self.assertCommandPass( ['/opt/d-cache/dcap/bin/dccp', self.remoteURL, self.tempFile] )
+        self.assertCommandPass( ['/usr/bin/dccp', self.localFile, self.remoteURL] )
+        self.assertCommandPass( ['/usr/bin/dccp', self.remoteURL, self.tempFile] )
 
         self.assertSameSum(self.localFile, self.tempFile)
 
     def testPrestageOnDir(self):
-        self.assertCommandFail( ['/opt/d-cache/dcap/bin/dccp', '-P', self.basepath ] )
+        self.assertCommandFail( ['/usr/bin/dccp', '-P', self.basepath ] )
 
     def tearDown(self):
 
