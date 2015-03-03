@@ -30,7 +30,7 @@ function run_g2()
     python $G2/lcgcopy.py -x
     #python $G2/serviceports.py -x
     python $G2/gsiftp.py -x
-    #python ~/testsuite/dcap.py -x
+    python ~/testsuite/dcap.py -x
 }
 
 check_envars DFTS_SUT DFTS_BASEPATH
