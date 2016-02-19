@@ -16,19 +16,13 @@ $(PACKAGE): bin tests
 	tar czf $(PACKAGE) $(PACKAGE_NAME)
 	rm -rf $(PACKAGE_NAME)
 
-rpm: clean g2.spec package rpmrc
+rpm: clean g2.spec package
 	[ ! -d RPM-BUILD ] && mkdir -p RPM-BUILD/tmp || :
 	[ ! -d RPM-BUILD/SOURCES ] && mkdir -p RPM-BUILD/SOURCES || :
 	[ ! -d RPM-BUILD/BUILD ] && mkdir -p RPM-BUILD/BUILD || :
 	[ ! -d RPM-BUILD/RPMS/noarch ] && mkdir -p RPM-BUILD/RPMS/noarch || :
-	utils/install-src -m644 g2-$(ID).tgz
-	utils/rpmbuild -bb g2.spec
-
-rpmmacros: rpmmacros.in
-	sed 's,@TARGET@,$(TARGET),g' rpmmacros.in > rpmmacros
-
-rpmrc: rpmmacros
-	utils/build-rpmrc $@
+	cp g2-$(ID).tgz RPM-BUILD/SOURCES
+	rpmbuild -D "_topdir $(TARGET)/RPM-BUILD" -D "_tmpdir $(TARGET)/RPM-BUILD/tmp" -bb g2.spec
 
 g2.spec: g2.spec.in
 	sed "s,@VERSION@,$(ID),g" g2.spec.in > g2.spec
