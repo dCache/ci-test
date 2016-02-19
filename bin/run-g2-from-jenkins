@@ -48,13 +48,13 @@ echo
 echo  "Running tests with SHA1 certificate"
 echo
 # destroy any voms-proxys possibly left over
-voms-proxy-destroy
+voms-proxy-destroy -q
 
 voms-proxy-init -rfc --voms desy
 run_g2
 
 # cleanup
-voms-proxy-destroy
+voms-proxy-destroy -q
 
 
 
@@ -79,7 +79,7 @@ voms-proxy-init -cert ~/.globus/TheGreatGonzo-cert.pem -key ~/.globus/TheGreatGo
 run_g2
 
 # cleanup
-voms-proxy-destroy
+voms-proxy-destroy -q
 
 
 #export ROOTSYS=/root/root_5.18/
