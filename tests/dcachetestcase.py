@@ -14,6 +14,10 @@ class SETestCase(unittest.TestCase):
         unittest.TestCase.__init__(self, methodName);
         self.sut = os.environ.get("DFTS_SUT")
         self.basepath = os.environ.get("DFTS_BASEPATH")
+        self.dCacheVersion = os.environ.get("DCACHE_VERSION")
+        elements = self.dCacheVersion.split('.')
+        self.dCacheMajorVersion = int(elements[0])
+        self.dCacheMinorVersion = int(elements[1])
 
         self.ws1path = "srm/managerv1"
 
@@ -25,6 +29,12 @@ class SETestCase(unittest.TestCase):
             self.timeout = 0
             self.commandOutput = ''
 
+
+    def dCacheVersionIsBefore(self, version):
+        elements = version.split('.')
+        major = int(elements[0])
+        minor = int(elements[1])
+        return major < self.dCacheMajorVersion or (major == self.dCacheMajorVersion and minor < self.dCacheMinorVersion)
 
 
     def assertCommandPass(self, attributes, msg=None ):

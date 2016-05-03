@@ -23,6 +23,13 @@ function check_envars()
   done
 }
 
+function dCache_branch()
+{
+    #  Here we assume that dCache webadmin is running on port 2288
+    curl -s http://$DFTS_SUT:2288/info/domains/dCacheDomain/cells/System/version/release \
+            | sed -n 's%.*release[^0-9]*\([0-9]*\.[0-9]*\).*%\1%p'
+}
+
 function run_g2()
 {
     python $G2/srmcopy.py -x
@@ -37,7 +44,9 @@ function run_g2()
 
 check_envars DFTS_SUT DFTS_BASEPATH
 
-echo Test end-point is $DFTS_SUT:$DFTS_BASEPATH
+export DCACHE_VERSION=$(dCache_version)
+
+echo "Test end-point is $DFTS_SUT:$DFTS_BASEPATH (v$DCACHE_VERSION)"
 
 export G2=/usr/lib/python2.4/site-packages/g2
 

@@ -40,35 +40,46 @@ class SrmCpSuite(dcachetestcase.SETestCase):
         self.execute(['srmrm', '-retry_num=0', self.remoteURL])
 
     def testV1Copy(self):
+        if self.dCacheVersionIsBefore("2.16"):
+            self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+            self.assertCommandPass( ['srmcp', '-retry_num=0', '-1', self.localURL, self.remoteURL] )
+            self.assertCommandPass( ['srmcp', '-retry_num=0', '-1', self.remoteURL, self.tempURL] )
+            self.assertSameSum(self.localFile, self.tempFile)
 
-        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
-        self.assertCommandPass( ['srmcp', '-retry_num=0', '-1', self.localURL, self.remoteURL] )
-        self.assertCommandPass( ['srmcp', '-retry_num=0', '-1', self.remoteURL, self.tempURL] )
-        self.assertSameSum(self.localFile, self.tempFile)
+            self.execute(['srmrm', '-retry_num=0', self.remoteURL])
 
-        self.execute(['srmrm', '-retry_num=0', self.remoteURL])
+        else:
+            print "Skipped test as dCache is v{}".format(self.dCacheVersion)
 
     def testv2CopyBadChecksum(self):
-        #
-        # while srmcp calculates checksum prior transfer
-        # modified file will produce differ checksum
-        #
-        self.localURL = "file://///proc/uptime"
-        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
-        self.assertCommandFail( ['srmcp', '-retry_num=0', '-1','-retry_num=', '1', self.localURL, self.remoteURL] )
+        if self.dCacheVersionIsBefore("2.16"):
+            #
+            # while srmcp calculates checksum prior transfer
+            # modified file will produce differ checksum
+            #
+            self.localURL = "file://///proc/uptime"
+            self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+            self.assertCommandFail( ['srmcp', '-retry_num=0', '-1','-retry_num=', '1', self.localURL, self.remoteURL] )
 
-        self.executeIgnoreFailure(['srmrm', '-retry_num=0', self.remoteURL])
+            self.executeIgnoreFailure(['srmrm', '-retry_num=0', self.remoteURL])
+
+        else:
+            print "Skipped test as dCache is v{}".format(self.dCacheVersion)
 
     def testv2CopyBadChecksumMD5(self):
-        #
-        # while srmcp calculates checksum prior transfer
-        # modified file will produce differ checksum
-        #
-        self.localURL = "file://///proc/uptime"
-        self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
-        self.assertCommandFail( ['srmcp', '-retry_num=0', '-1', '-cksm_type=MD5', self.localURL, self.remoteURL] )
+        if self.dCacheVersionIsBefore("2.16"):
+            #
+            # while srmcp calculates checksum prior transfer
+            # modified file will produce differ checksum
+            #
+            self.localURL = "file://///proc/uptime"
+            self.remoteURL = "srm://%s%s/%s" % (self.sut, self.basepath, self.uniqueFile)
+            self.assertCommandFail( ['srmcp', '-retry_num=0', '-1', '-cksm_type=MD5', self.localURL, self.remoteURL] )
 
-        self.executeIgnoreFailure(['srmrm', '-retry_num=0', self.remoteURL])
+            self.executeIgnoreFailure(['srmrm', '-retry_num=0', self.remoteURL])
+
+        else:
+            print "Skipped test as dCache is v{}".format(self.dCacheVersion)
 
     def testV2CopyDirNotExist(self):
 
