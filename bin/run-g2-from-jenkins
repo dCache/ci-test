@@ -23,11 +23,27 @@ function check_envars()
   done
 }
 
-function dCache_version()
+function probe_dCache_version()
 {
     #  Here we assume that dCache webadmin is running on port 2288
     curl -s http://$DFTS_SUT:2288/info/domains/dCacheDomain/cells/System/version/release \
         | sed -n 's%[^>]*"release"[^>]*>\([^<]*\)<.*%\1%p'
+}
+
+function dCache_version()
+{
+    version=$(probe_dCache_version)
+    count=1
+    while [ "x$version" = "x" -a $count -lt 60 ]; do
+        sleep 1
+        version=$(probe_dCache_version)
+	count=$(( $count + 1 ))
+    done
+    if [ "$version" != "" ]; then
+	echo $version
+    else
+	echo 2.10.999-PROBE-FAILED
+    fi
 }
 
 function run_g2()
