@@ -15,9 +15,18 @@ class SETestCase(unittest.TestCase):
         self.sut = os.environ.get("DFTS_SUT")
         self.basepath = os.environ.get("DFTS_BASEPATH")
         self.dCacheVersion = os.environ.get("DCACHE_VERSION")
-        elements = self.dCacheVersion.split('.')
-        self.dCacheMajorVersion = int(elements[0])
-        self.dCacheMinorVersion = int(elements[1])
+        if self.dCacheVersion and self.dCacheVersion != "":
+            elements = self.dCacheVersion.split('.')
+            self.dCacheVersionMajor = int(elements[0])
+            self.dCacheVersionMinor = int(elements[1])
+        else:
+            print
+            print "    FAILED TO DISCOVER DCACHE VERSION"
+            print
+            print "        assuming 2.10"
+            print
+            self.dCacheVersionMajor = 2
+            self.dCacheVersionMinor = 10
 
         self.ws1path = "srm/managerv1"
 
@@ -30,12 +39,35 @@ class SETestCase(unittest.TestCase):
             self.commandOutput = ''
 
 
-    def dCacheVersionIsBefore(self, version):
+    def dCacheOlderThan(self, version):
         elements = version.split('.')
         major = int(elements[0])
         minor = int(elements[1])
-        return major < self.dCacheMajorVersion or (major == self.dCacheMajorVersion and minor < self.dCacheMinorVersion)
+        return self.dCacheVersionMajor < major or (self.dCacheVersionMajor == major and self.dCacheVersionMinor < minor)
 
+    def dCacheOlderThanOrIs(self, version):
+        elements = version.split('.')
+        major = int(elements[0])
+        minor = int(elements[1])
+        return self.dCacheVersionMajor < major or (self.dCacheVersionMajor == major and self.dCacheVersionMinor <= minor)
+
+    def dCacheIs(self, version):
+        elements = version.split('.')
+        major = int(elements[0])
+        minor = int(elements[1])
+        return self.dCacheVersionMajor == major and self.dCacheVersionMinor == minor
+
+    def dCacheNewerThanOrIs(self, version):
+        elements = version.split('.')
+        major = int(elements[0])
+        minor = int(elements[1])
+        return self.dCacheVersionMajor > major or (self.dCacheVersionMajor == major and self.dCacheVersionMinor >= minor)
+
+    def dCacheNewerThan(self, version):
+        elements = version.split('.')
+        major = int(elements[0])
+        minor = int(elements[1])
+        return self.dCacheVersionMajor > major or (self.dCacheVersionMajor == major and self.dCacheVersionMinor > minor)
 
     def assertCommandPass(self, attributes, msg=None ):
         self.assertCommandPassWithENVs(attributes, None, msg)
