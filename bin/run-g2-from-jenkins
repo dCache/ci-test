@@ -58,7 +58,7 @@ function run_g2()
 
 
 
-check_envars DFTS_SUT DFTS_BASEPATH
+check_envars DFTS_SUT DFTS_BASEPATH WORKSPACE
 
 export DCACHE_VERSION=$(dCache_version)
 
@@ -66,6 +66,8 @@ echo "Test end-point is $DFTS_SUT:$DFTS_BASEPATH (v$DCACHE_VERSION)"
 
 export G2=/usr/lib/python2.4/site-packages/g2
 
+##  Unfortunately, this breaks dCache srm-client
+# export X509_USER_PROXY=$WORKSPACE/proxy-credential
 
 
 echo
