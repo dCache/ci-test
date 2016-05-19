@@ -23,6 +23,11 @@ How to run the tests:
 
         export DFTS_BASEPATH=/data/g2-tests
 
+    *  Optionally define a timeout (in seconds) for
+       each command:
+
+        export DFTS_TIMEOUT=60
+
 3. Create a X.509 proxy certificate:
     
     A typical invocation looks like
