@@ -23,7 +23,14 @@ function check_envars()
   done
 }
 
-function probe_dCache_version()
+function probe_dCache_version_via_webdav()
+{
+    #  Here we assume that dCache WebDAV door is running on port 2880
+    curl -D- -s http://$DFTS_SUT:2880/ \
+	| sed -n 's%^Server: dCache/\([0-9.A-Z-]*\).*%\1%p'
+}
+
+function probe_dCache_version_via_info()
 {
     #  Here we assume that dCache webadmin is running on port 2288
     curl -s http://$DFTS_SUT:2288/info/domains/dCacheDomain/cells/System/version/release \
@@ -32,11 +39,11 @@ function probe_dCache_version()
 
 function dCache_version()
 {
-    version=$(probe_dCache_version)
+    version=$(probe_dCache_version_via_webdav)
     count=1
-    while [ "x$version" = "x" -a $count -lt 60 ]; do
+    while [ "x$version" = "x" -a $count -lt 120 ]; do
         sleep 1
-        version=$(probe_dCache_version)
+        version=$(probe_dCache_version_via_info)
 	count=$(( $count + 1 ))
     done
     if [ "$version" != "" ]; then
