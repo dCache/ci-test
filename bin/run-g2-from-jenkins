@@ -65,7 +65,14 @@ export DCACHE_VERSION=$(dCache_version)
 echo "Test end-point is $DFTS_SUT:$DFTS_BASEPATH (v$DCACHE_VERSION)"
 
 export G2=/usr/lib/python2.4/site-packages/g2
-export DFTS_TIMEOUT=60
+
+##  Unfortunately, we CANNOT use DFTS_TIMEOUT as support is broken.
+##  When a timeout is specified then commands that fail are reported
+##  as having succeeded.  See:
+##
+##    https://github.com/dCache/g2/issues/1
+##
+# export DFTS_TIMEOUT=60
 
 ##  Unfortunately, this breaks dCache srm-client
 # export X509_USER_PROXY=$WORKSPACE/proxy-credential
