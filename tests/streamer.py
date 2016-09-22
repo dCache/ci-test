@@ -110,7 +110,7 @@ class launcher:
 
             os.execvpe(self.executable, self.attributes,self.environmentGet())
 
-            sys.exit()
+            sys.exit(127)
         if processid > 0:
             self.pid = processid
             for pipe in self.pipeList:
